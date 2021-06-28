@@ -6,7 +6,7 @@ SERVER = socket.gethostbyname(socket.gethostname()) #automatically get the local
 ADDRESS = (SERVER, PORT)
 HEADER = 64
 FORMAT = 'utf-8'
-DISCONNECT_MSG = "!DISCONNECT"
+DISCONNECT_MSG = "Disconnected"
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #making a new socket
 server.bind(ADDRESS) #bind the socket to the address
@@ -25,6 +25,7 @@ def handle_client(con, address):
                 connected = False
 
             print(f"[{address}] {msg}")
+            con.send("Message received.".encode(FORMAT)) #send a message back to client
 
     con.close()
 
