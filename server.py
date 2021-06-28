@@ -11,21 +11,22 @@ DISCONNECT_MSG = "!DISCONNECT"
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #making a new socket
 server.bind(ADDRESS) #bind the socket to the address
 
-def handle_client(connect, address):
+def handle_client(con, address):
     print(f"[NEW CONNECTION] {address} connected.")
 
     connected = True
     while connected:
-        msg_len = connect.recv(HEADER).decode(FORMAT)
-        msg_len = int(msg_len)
-        msg = connect.recv(msg_len).decode(FORMAT) #tells how long the message is going to be
+        msg_len = con.recv(HEADER).decode(FORMAT)
+        if msg_len:
+            msg_len = int(msg_len)
+            msg = con.recv(msg_len).decode(FORMAT) #tells how long the message is going to be
 
-        if msg == DISCONNECT_MSG:
-            connected = False
+            if msg == DISCONNECT_MSG:
+                connected = False
 
-        print(f"[{address}] {msg}")
+            print(f"[{address}] {msg}")
 
-    connect.close()
+    con.close()
 
 
 def start():
