@@ -1,8 +1,8 @@
-import socket 
-import threading
+import socket #importing python socket library
+import threading #importing python threading library
 
 HEADER = 64 #defining header length in bytes
-PORT = 5050 # pick port
+PORT = 6050 # pick port
 #SERVER = "192.168.1.5" # manual own local ip definition
 SERVER = socket.gethostbyname(socket.gethostname()) # using gethostbyname to get own local ip
 #print("server starting on address: " + SERVER) # debugging
@@ -19,13 +19,15 @@ def handle_client(conn, addr): #client handler function
 
     connected = True
     while connected:
-        msg_length = conn.recv(HEADER).decode(FORMAT) #decoding the message into readable form by program
-        msg_length = int(msg_length) #turning message length into an int
-        msg = conn.recv(msg_length).decode(FORMAT) #decoding actual message
-        if msg == DISCONNECT_MESSAGE: #if client disconnects
-            connected = False
-        
-        print(f"[{addr}] {msg}")
+        msg_length = conn.recv(HEADER).decode(FORMAT)#decoding the message into readable form by program
+        if msg_length:
+            msg_length = int(msg_length) #turning message length into an int
+            msg = conn.recv(msg_length).decode(FORMAT) #decoding actual message
+            if msg == DISCONNECT_MESSAGE: #if client disconnects
+                connected = False
+            
+            print(f"[{addr}] {msg}")
+            conn.send("msg received".encode(FORMAT)) #confirmation msg to client
 
     conn.close() #terminates connection
 
